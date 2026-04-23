@@ -64,16 +64,6 @@ const app = {
   },
 
   
-// ===== 注册/登录表单事件监听 =====
-document.addEventListener('DOMContentLoaded', function() {
-  var regPwd = document.querySelector('#register-form input[name="password"]');
-  if (regPwd) {
-    regPwd.addEventListener('input', function() {
-      app.checkPasswordStrength(this.value);
-    });
-  }
-});
-
 // ===== 初始化 =====
   async init() {
     // 检查登录状态
@@ -975,8 +965,12 @@ document.querySelectorAll('.nav-link').forEach(link => {
 });
 
 // ===== 初始化 =====
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', function() {
   app.init();
+  var regPwd = document.querySelector('#register-form input[name="password"]');
+  if (regPwd) {
+    regPwd.addEventListener('input', function() { app.checkPasswordStrength(this.value); });
+  }
 });
 
 // 定期保存学习时间
