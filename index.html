@@ -477,20 +477,48 @@
     <div class="modal-box">
       <button class="modal-close" onclick="app.hideAuthModal()">×</button>
       <div class="modal-tabs">
-        <button class="modal-tab active" onclick="app.switchAuthTab('login')">登录</button>
-        <button class="modal-tab" onclick="app.switchAuthTab('register')">注册</button>
+        <button class="modal-tab active" id="tab-login" onclick="app.switchAuthTab('login')">登录</button>
+        <button class="modal-tab" id="tab-register" onclick="app.switchAuthTab('register')">注册</button>
       </div>
       <div class="modal-body">
         <form id="login-form" onsubmit="app.handleLogin(event)">
-          <input type="text" class="modal-input" name="username" placeholder="用户名" required minlength="3">
-          <input type="password" class="modal-input" name="password" placeholder="密码" required minlength="6">
-          <button type="submit" class="btn btn-primary" style="width:100%">登录</button>
+          <div class="form-field">
+            <input type="text" class="modal-input" name="username" placeholder="用户名" required minlength="3" maxlength="20">
+            <div class="field-error" id="login-username-error"></div>
+          </div>
+          <div class="form-field">
+            <div class="password-wrap">
+              <input type="password" class="modal-input" name="password" placeholder="密码" required minlength="6" maxlength="50">
+              <button type="button" class="pwd-toggle" onclick="app.togglePassword(this)" tabindex="-1">
+                <svg class="icon" style="width:18px;height:18px"><use href="#icon-eye"/></svg>
+              </button>
+            </div>
+            <div class="field-error" id="login-password-error"></div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="login-btn" style="width:100%">登录</button>
         </form>
         <form id="register-form" style="display:none" onsubmit="app.handleRegister(event)">
-          <input type="text" class="modal-input" name="username" placeholder="用户名 (3-20字符)" required minlength="3" maxlength="20">
-          <input type="password" class="modal-input" name="password" placeholder="密码 (至少6位)" required minlength="6">
-          <input type="text" class="modal-input" name="nickname" placeholder="昵称（可选）">
-          <button type="submit" class="btn btn-primary" style="width:100%">注册</button>
+          <div class="form-field">
+            <input type="text" class="modal-input" name="username" placeholder="用户名 (3-20字符)" required minlength="3" maxlength="20">
+            <div class="field-hint" id="reg-username-hint">3-20个字符，仅支持字母、数字和下划线</div>
+            <div class="field-error" id="reg-username-error"></div>
+          </div>
+          <div class="form-field">
+            <div class="password-wrap">
+              <input type="password" class="modal-input" name="password" placeholder="密码 (至少6位)" required minlength="6" maxlength="50">
+              <button type="button" class="pwd-toggle" onclick="app.togglePassword(this)" tabindex="-1">
+                <svg class="icon" style="width:18px;height:18px"><use href="#icon-eye"/></svg>
+              </button>
+            </div>
+            <div class="pwd-strength" id="pwd-strength"></div>
+            <div class="field-error" id="reg-password-error"></div>
+          </div>
+          <div class="form-field">
+            <input type="text" class="modal-input" name="nickname" placeholder="昵称（可选）" maxlength="20">
+            <div class="field-hint">给自己起个好听的名字吧~</div>
+            <div class="field-error" id="reg-nickname-error"></div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="register-btn" style="width:100%">创建账号</button>
         </form>
         <div class="modal-error" id="auth-error"></div>
       </div>

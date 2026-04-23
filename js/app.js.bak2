@@ -63,18 +63,7 @@ const app = {
     window.scrollTo(0, 0);
   },
 
-  
-// ===== 注册/登录表单事件监听 =====
-document.addEventListener('DOMContentLoaded', function() {
-  var regPwd = document.querySelector('#register-form input[name="password"]');
-  if (regPwd) {
-    regPwd.addEventListener('input', function() {
-      app.checkPasswordStrength(this.value);
-    });
-  }
-});
-
-// ===== 初始化 =====
+  // ===== 初始化 =====
   async init() {
     // 检查登录状态
     if (AuthAPI.isLoggedIn()) {
@@ -127,168 +116,63 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   },
 
-  showAuthModal(tab) {
+  showAuthModal() {
     document.getElementById('auth-modal').style.display = 'flex';
     document.getElementById('auth-error').textContent = '';
-    this.clearFieldErrors();
-    if (tab) this.switchAuthTab(tab);
-    setTimeout(function() {
-      var visibleForm = tab === 'register' ? 'register-form' : 'login-form';
-      var firstInput = document.querySelector('#' + visibleForm + ' input');
-      if (firstInput) firstInput.focus();
-    }, 100);
   },
 
   hideAuthModal() {
     document.getElementById('auth-modal').style.display = 'none';
-    this.clearFieldErrors();
-    document.getElementById('login-form').reset();
-    document.getElementById('register-form').reset();
-    var pwStrength = document.getElementById('pwd-strength');
-    if (pwStrength) pwStrength.innerHTML = '';
   },
 
   switchAuthTab(tab) {
-    document.querySelectorAll('.modal-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
     document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
     document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
     document.getElementById('auth-error').textContent = '';
-    this.clearFieldErrors();
   },
-
-  clearFieldErrors() {
-    document.querySelectorAll('.field-error').forEach(function(el) { el.textContent = ''; });
-    document.querySelectorAll('.modal-input').forEach(function(el) { el.classList.remove('input-error'); });
-  },
-
-  setFieldError(id, message) {
-    var el = document.getElementById(id);
-    if (el) {
-      el.textContent = message;
-      var input = el.closest('.form-field')?.querySelector('.modal-input');
-      if (input) input.classList.add('input-error');
-    }
-  },
-
-  setBtnLoading(btnId, loading) {
-    var btn = document.getElementById(btnId);
-    if (!btn) return;
-    if (loading) {
-      btn.disabled = true;
-      btn.dataset.originalText = btn.textContent;
-      btn.innerHTML = '<span class="spinner"></span>处理中...';
-    } else {
-      btn.disabled = false;
-      btn.textContent = btn.dataset.originalText || (btnId === 'login-btn' ? '登录' : '创建账号');
-    }
-  },
-
-  togglePassword(btn) {
-    var input = btn.parentElement.querySelector('input');
-    if (input.type === 'password') {
-      input.type = 'text';
-      btn.title = '隐藏密码';
-    } else {
-      input.type = 'password';
-      btn.title = '显示密码';
-    }
-  },
-
-  checkPasswordStrength(password) {
-    var el = document.getElementById('pwd-strength');
-    if (!el) return;
-    if (!password) { el.innerHTML = ''; return; }
-    var score = 0;
-    if (password.length >= 6) score++;
-    if (password.length >= 10) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-    var labels = ['太短', '弱', '一般', '不错', '强', '很强'];
-    var colors = ['#FF4B4B', '#FF4B4B', '#FF9600', '#FFC800', '#58CC02', '#1CB0F6'];
-    var widths = ['20%', '40%', '60%', '70%', '85%', '100%'];
-    var idx = Math.min(score, 5);
-    el.innerHTML = '<div class="strength-bar"><div class="strength-fill" style="width:' + widths[idx] + ';background:' + colors[idx] + '"></div></div><span class="strength-label" style="color:' + colors[idx] + '">' + labels[idx] + '</span>';
-  },
-
-  validateUsername(username) {
-    if (!username) return '用户名不能为空';
-    if (username.length < 3) return '用户名至少3个字符';
-    if (username.length > 20) return '用户名最多20个字符';
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) return '仅支持字母、数字和下划线';
-    return '';
-  },
-
-  validatePassword(password) {
-    if (!password) return '密码不能为空';
-    if (password.length < 6) return '密码至少6位';
-    return '';
-  },
-
-
 
   async handleLogin(e) {
     e.preventDefault();
-    var form = e.target;
-    var errorEl = document.getElementById('auth-error');
-    this.clearFieldErrors();
+    const form = e.target;
+    const errorEl = document.getElementById('auth-error');
     errorEl.textContent = '';
-    var username = form.username.value.trim();
-    var password = form.password.value;
-    var uErr = this.validateUsername(username);
-    if (uErr) { this.setFieldError('login-username-error', uErr); return; }
-    var pErr = this.validatePassword(password);
-    if (pErr) { this.setFieldError('login-password-error', pErr); return; }
-    this.setBtnLoading('login-btn', true);
+    
     try {
-      var data = await AuthAPI.login(username, password);
+      const data = await AuthAPI.login(form.username.value, form.password.value);
       AppState.user = data.user;
       AppState.serverStats = data.stats;
       this.hideAuthModal();
       this.renderUserArea();
       this.renderHome();
-      this.showToast('欢迎回来，' + (data.user.nickname || data.user.username) + '！');
+      this.showToast(`欢迎回来，${data.user.nickname || data.user.username}！`);
+      // 同步离线队列
       SyncQueue.flush();
     } catch (err) {
-      errorEl.textContent = err.message || '登录失败，请检查用户名和密码';
-    } finally {
-      this.setBtnLoading('login-btn', false);
+      errorEl.textContent = err.message || '登录失败';
     }
   },
 
   async handleRegister(e) {
     e.preventDefault();
-    var form = e.target;
-    var errorEl = document.getElementById('auth-error');
-    this.clearFieldErrors();
+    const form = e.target;
+    const errorEl = document.getElementById('auth-error');
     errorEl.textContent = '';
-    var username = form.username.value.trim();
-    var password = form.password.value;
-    var nickname = form.nickname.value.trim();
-    var uErr = this.validateUsername(username);
-    if (uErr) { this.setFieldError('reg-username-error', uErr); return; }
-    var pErr = this.validatePassword(password);
-    if (pErr) { this.setFieldError('reg-password-error', pErr); return; }
-    this.setBtnLoading('register-btn', true);
+    
     try {
-      var data = await AuthAPI.register(username, password, nickname);
+      const data = await AuthAPI.register(form.username.value, form.password.value, form.nickname.value);
       AppState.user = data.user;
-      AppState.serverStats = data.stats;
       this.hideAuthModal();
       this.renderUserArea();
       this.renderHome();
-      this.showToast('欢迎加入，' + (data.user.nickname || data.user.username) + '！');
-      SyncQueue.flush();
+      this.showToast('注册成功！');
     } catch (err) {
-      errorEl.textContent = err.message || '注册失败，用户名可能已被使用';
-    } finally {
-      this.setBtnLoading('register-btn', false);
+      errorEl.textContent = err.message || '注册失败';
     }
   },
 
   logout() {
-    if (!confirm('确定要退出登录吗？')) return;
     AuthAPI.logout();
     AppState.user = null;
     AppState.serverStats = null;

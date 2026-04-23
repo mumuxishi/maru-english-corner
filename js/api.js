@@ -40,10 +40,15 @@ async function apiFetch(url, options = {}) {
 // ===== 认证 API =====
 const AuthAPI = {
   async register(username, password, nickname) {
-    return apiFetch('/api/auth/register', {
+    const data = await apiFetch('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({ username, password, nickname })
     });
+    if (data.token) {
+      setToken(data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+    return data;
   },
   
   async login(username, password) {
