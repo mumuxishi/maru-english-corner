@@ -31,8 +31,6 @@ const AppState = {
   learnedWords: new Set(JSON.parse(localStorage.getItem('learnedWords') || '[]')),
   totalPoints: parseInt(localStorage.getItem('totalPoints') || '0'),
   studyTime: parseInt(localStorage.getItem('studyTime') || '0'),
-  contextQueue: [],
-  contextIndex: 0,
   gameActive: false,
   gameScore: 0,
   gameTimer: null,
@@ -58,7 +56,6 @@ const app = {
     
     if (page === 'home') this.renderHome();
     if (page === 'learn') this.initLearn();
-    if (page === 'context') this.initContext();
     if (page === 'games') this.exitGame();
     window.scrollTo(0, 0);
   },
@@ -328,13 +325,14 @@ const app = {
 
   renderRootList() {
     const list = document.getElementById('root-list');
-    const roots = getAllRoots();
-    list.innerHTML = roots.map(root => {
+    const roots = getAllRoots().sort((a, b) => a.localeCompare(b));
+    list.innerHTML = roots.map((root, index) => {
       const info = ROOT_DATA[root];
       const count = getWordsByRoot(root).length;
       return `
         <button class="root-btn ${root === AppState.currentRoot ? 'active' : ''}" 
                 onclick="app.selectRoot('${root}')">
+          <span class="root-serial" style="opacity:0.4;font-size:11px;margin-right:2px;min-width:18px;display:inline-block;text-align:right;">${index + 1}.</span>
           <span class="root-color-dot" style="background: ${info.color}"></span>
           ${root} <span style="opacity:0.5;font-size:12px">(${count})</span>
         </button>
@@ -475,123 +473,6 @@ const app = {
       this.showToast(`已学会 "${word.word}"，+10分！`);
       this.nextWord();
     }
-  },
-
-  // ===== 语境记忆 =====
-  initContext() {
-    AppState.contextQueue = getRandomWords(5);
-    AppState.contextIndex = 0;
-    this.renderContextQuestion();
-  },
-
-  renderContextQuestion() {
-    const question = AppState.contextQueue[AppState.contextIndex];
-    if (!question) {
-      this.showContextComplete();
-      return;
-    }
-
-    const progress = ((AppState.contextIndex) / AppState.contextQueue.length) * 100;
-    document.getElementById('context-progress').style.width = progress + '%';
-    document.getElementById('context-progress-text').textContent = `${AppState.contextIndex + 1} / ${AppState.contextQueue.length}`;
-
-    document.getElementById('context-word').textContent = question.word;
-    document.getElementById('context-phonetic').textContent = question.phonetic;
-
-    // 替换句子中的单词为填空
-    const example = question.examples[0];
-    const regex = new RegExp(`\\b${question.word}\\b`, 'gi');
-    const sentenceWithBlank = example.en.replace(regex, `<span class="blank">_____</span>`);
-    document.getElementById('context-sentence').innerHTML = sentenceWithBlank;
-    document.getElementById('context-translation').textContent = example.cn;
-    document.getElementById('context-translation').classList.remove('show');
-
-    // 生成选项
-    const distractors = WORD_DATA
-      .filter(w => w.word !== question.word)
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 3);
-    const options = [question, ...distractors].sort(() => 0.5 - Math.random());
-
-    const optionsEl = document.getElementById('context-options');
-    optionsEl.innerHTML = options.map(opt => `
-      <button class="option-btn" onclick="app.checkContextAnswer('${opt.word}', '${question.word}', this)">
-        ${opt.word} — ${opt.meaning}
-      </button>
-    `).join('');
-
-    document.getElementById('context-feedback').textContent = '';
-    document.getElementById('context-feedback').className = 'context-feedback';
-    document.getElementById('context-next-btn').disabled = true;
-  },
-
-  async checkContextAnswer(selected, correct, btnEl) {
-    const buttons = document.querySelectorAll('.option-btn');
-    buttons.forEach(b => b.disabled = true);
-
-    const feedback = document.getElementById('context-feedback');
-    const isCorrect = selected === correct;
-
-    if (isCorrect) {
-      btnEl.classList.add('correct');
-      feedback.innerHTML = SVG.icon('check', 'feedback-icon correct') + '<div>回答正确！+15分</div>';
-      feedback.className = 'context-feedback correct';
-      AppState.totalPoints += 15;
-      AppState.learnedWords.add(correct);
-      this.saveLocalStats();
-      
-      if (AuthAPI.isLoggedIn()) {
-        try {
-          await WordsAPI.markLearned(correct);
-          await ProgressAPI.addPoints(15, 'context_quiz', { word: correct });
-        } catch (err) {
-          SyncQueue.add('learn_word', { word: correct });
-          SyncQueue.add('add_points', { points: 15 });
-        }
-      }
-      
-      confettiEffect();
-    } else {
-      btnEl.classList.add('wrong');
-      buttons.forEach(b => {
-        if (b.textContent.trim().startsWith(correct)) b.classList.add('correct');
-      });
-      feedback.innerHTML = SVG.icon('cross', 'feedback-icon wrong') + `<div>正确答案是 "${correct}"</div>`;
-      feedback.className = 'context-feedback wrong';
-    }
-
-    document.getElementById('context-translation').classList.add('show');
-    document.getElementById('context-next-btn').disabled = false;
-  },
-
-  showHint() {
-    const question = AppState.contextQueue[AppState.contextIndex];
-    if (question) {
-      const breakdown = question.breakdown.map(b => `${b.part}(${b.meaning})`).join(' + ');
-      this.showToast(`提示：${breakdown}`);
-    }
-  },
-
-  nextContext() {
-    AppState.contextIndex++;
-    if (AppState.contextIndex >= AppState.contextQueue.length) {
-      this.showContextComplete();
-    } else {
-      this.renderContextQuestion();
-    }
-  },
-
-  showContextComplete() {
-    document.getElementById('context-progress').style.width = '100%';
-    document.getElementById('context-card').innerHTML = `
-      <div style="text-align:center;padding:60px 20px">
-        <div style="margin-bottom:16px"><svg class="illustration illustration-md" viewBox="0 0 200 160"><use href="#celebrate"/></svg></div>
-        <h2 style="font-size:28px;margin-bottom:12px">练习完成！</h2>
-        <p style="color:var(--text-light);margin-bottom:28px">你已完成了所有语境练习</p>
-        <button class="btn btn-primary" onclick="app.initContext()">再来一组 →</button>
-      </div>
-    `;
-    confettiEffect();
   },
 
   // ===== 趣味游戏 =====

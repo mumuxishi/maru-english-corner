@@ -19,9 +19,6 @@
       <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
       </symbol>
-      <symbol id="icon-puzzle" viewBox="-1 -1 26 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
-        <path d="M12 3v5"/><circle cx="12" cy="10" r="2.5"/>
         <path d="M3 12h5"/><circle cx="10" cy="12" r="2.5"/>
         <path d="M16 12h5"/><circle cx="14" cy="12" r="2.5"/>
         <path d="M12 16v5"/><circle cx="12" cy="14" r="2.5"/>
@@ -218,7 +215,6 @@
     <div class="nav-links">
       <a href="#" class="nav-link active" data-page="home">首页</a>
       <a href="#" class="nav-link" data-page="learn">词根学习</a>
-      <a href="#" class="nav-link" data-page="context">语境记忆</a>
       <a href="#" class="nav-link" data-page="games">趣味挑战</a>
     </div>
     <div class="nav-stats">
@@ -357,47 +353,6 @@
     </section>
 
     <!-- ========== 语境记忆 ========== -->
-    <section id="page-context" class="page">
-      <div class="context-header">
-        <h2><svg class="icon icon-header"><use href="#icon-book"/></svg>语境沉浸记忆</h2>
-        <p>在真实句子中理解单词，让记忆更深刻</p>
-      </div>
-
-      <div class="context-container">
-        <div class="context-card" id="context-card">
-          <div class="context-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" id="context-progress"></div>
-            </div>
-            <span class="progress-text" id="context-progress-text">1 / 5</span>
-          </div>
-
-          <div class="context-word-area">
-            <div class="context-word" id="context-word">transport</div>
-            <div class="context-phonetic" id="context-phonetic">/ˈtrænspɔːrt/</div>
-          </div>
-
-          <div class="context-sentence-area">
-            <div class="context-label">请在语境中理解这个单词：</div>
-            <div class="context-sentence" id="context-sentence">
-              The goods were <span class="blank">_____</span> by ship from Shanghai to Los Angeles.
-            </div>
-            <div class="context-translation" id="context-translation"></div>
-          </div>
-
-          <div class="context-options" id="context-options">
-            <!-- 动态生成选项 -->
-          </div>
-
-          <div class="context-feedback" id="context-feedback"></div>
-
-          <div class="context-actions">
-            <button class="btn btn-secondary" onclick="app.showHint()"><svg class="icon icon-btn"><use href="#icon-lightbulb"/></svg>提示</button>
-            <button class="btn btn-primary" id="context-next-btn" onclick="app.nextContext()" disabled>下一题<svg class="icon icon-btn"><use href="#icon-arrow-right"/></svg></button>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- ========== 趣味挑战 ========== -->
     <section id="page-games" class="page">
@@ -457,10 +412,6 @@
     <button class="bottom-nav-item" data-page="learn" onclick="app.goTo('learn')">
       <svg class="icon icon-nav"><use href="#icon-book"/></svg>
       <span>学习</span>
-    </button>
-    <button class="bottom-nav-item" data-page="context" onclick="app.goTo('context')">
-      <svg class="icon icon-nav"><use href="#icon-puzzle"/></svg>
-      <span>练习</span>
     </button>
     <button class="bottom-nav-item" data-page="games" onclick="app.goTo('games')">
       <svg class="icon icon-nav"><use href="#icon-gamepad"/></svg>
