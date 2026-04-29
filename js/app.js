@@ -319,6 +319,11 @@ const app = {
 
   // ===== 词根学习 =====
   initLearn() {
+    const roots = getAllRoots().sort((a, b) => a.localeCompare(b));
+    if (roots.length > 0 && !roots.includes(AppState.currentRoot)) {
+      AppState.currentRoot = roots[0];
+      AppState.currentWordIndex = 0;
+    }
     this.renderRootList();
     this.selectRoot(AppState.currentRoot);
   },
@@ -331,6 +336,7 @@ const app = {
       const count = getWordsByRoot(root).length;
       return `
         <button class="root-btn ${root === AppState.currentRoot ? 'active' : ''}" 
+                data-root="${root}"
                 onclick="app.selectRoot('${root}')">
           <span class="root-serial" style="opacity:0.4;font-size:11px;margin-right:2px;min-width:18px;display:inline-block;text-align:right;">${index + 1}.</span>
           ${root} <span style="opacity:0.5;font-size:12px">(${count})</span>
@@ -344,7 +350,7 @@ const app = {
     AppState.currentWordIndex = 0;
     
     document.querySelectorAll('.root-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.textContent.trim().startsWith(root));
+      btn.classList.toggle('active', btn.dataset.root === root);
     });
     
     this.renderWordCard();
@@ -382,7 +388,7 @@ const app = {
     // 词根信息（标题栏）
     const rootInfo = ROOT_DATA[word.root];
     document.getElementById('root-info-header').innerHTML = `
-      <span class="root-tag" style="background: ${rootInfo.color}">${word.root}</span>
+      <span class="root-tag">${word.root}</span>
       <span class="root-desc">${rootInfo.meaning}（${rootInfo.origin}）</span>
     `;
 
@@ -404,8 +410,7 @@ const app = {
             onclick="app.goToFamilyWord('${fw}')" 
             title="${fw === word.word ? '当前单词' : '点击查看'}">${fw}</span>
     `).join('');
-    document.getElementById('family-count').textContent = 
-      `该词根共有 ${familyList.length} 个相关单词，${getWordsByRoot(word.root).length} 个已收录详细学习数据`;
+
   },
 
   goToFamilyWord(word) {
@@ -423,7 +428,7 @@ const app = {
 
   highlightWord(sentence, word) {
     const regex = new RegExp(`\\b${word}\\b`, 'gi');
-    return sentence.replace(regex, `<strong style="color:var(--primary)">${word}</strong>`);
+    return sentence.replace(regex, `<strong class="highlight">${word}</strong>`);
   },
 
   prevWord() {

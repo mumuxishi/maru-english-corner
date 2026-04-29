@@ -290,11 +290,6 @@
 
     <!-- ========== 词根学习 ========== -->
     <section id="page-learn" class="page">
-      <div class="learn-header">
-        <h2><svg class="icon icon-header"><use href="#icon-puzzle"/></svg>词根拆解学习</h2>
-        <p>像侦探一样拆解单词，理解它背后的逻辑</p>
-      </div>
-
       <div class="learn-container">
         <!-- 左侧：词根选择 -->
         <div class="root-sidebar">
@@ -313,18 +308,35 @@
                 <span class="root-tag">port</span>
                 <span class="root-desc">携带 / to carry （拉丁语 portare）</span>
               </div>
-              <button class="btn-icon" onclick="app.speakWord()"><svg class="icon"><use href="#icon-speaker"/></svg></button>
             </div>
             <div class="card-body">
+              <div class="family-section" id="family-section">
+                <div class="family-header-row">
+                  <div class="family-title"><svg class="icon icon-section"><use href="#icon-home"/></svg>词根家族</div>
+                  <div class="family-nav">
+                    <button class="btn-nav-small" onclick="app.prevWord()"><svg class="icon"><use href="#icon-arrow-left"/></svg>上一个</button>
+                    <button class="btn-nav-small" onclick="app.nextWord()">下一个<svg class="icon"><use href="#icon-arrow-right"/></svg></button>
+                  </div>
+                </div>
+                <div class="family-list" id="family-list">
+                  <!-- 动态生成 -->
+                </div>
+              </div>
+
               <div class="word-top-row">
                 <div class="word-left-col">
-                  <div class="word-main" id="word-main">transport</div>
-                  <div class="word-phonetic" id="word-phonetic">/ˈtrænspɔːrt/</div>
+                  <div class="word-title-row">
+                    <div class="word-main" id="word-main">transport</div>
+                    <button class="btn-ok" onclick="app.markLearned()">OK</button>
+                  </div>
+                  <div class="word-phonetic-row">
+                    <span class="word-phonetic" id="word-phonetic">/ˈtrænspɔːrt/</span>
+                    <button class="btn-speak-inline" onclick="app.speakWord()"><svg class="icon"><use href="#icon-speaker"/></svg></button>
+                  </div>
                   <div class="word-meaning" id="word-meaning">运输，交通</div>
                 </div>
                 <div class="word-right-col">
                   <div class="breakdown-section">
-                    <div class="breakdown-title"><svg class="icon icon-section"><use href="#icon-search"/></svg>词根拆解</div>
                     <div class="breakdown-parts" id="breakdown-parts">
                       <!-- 动态生成 -->
                     </div>
@@ -333,25 +345,13 @@
               </div>
 
               <div class="examples-section">
-                <div class="examples-title"><svg class="icon icon-section"><use href="#icon-book"/></svg>语境例句</div>
+                <div class="examples-title"><svg class="icon icon-section"><use href="#icon-book"/></svg>例句</div>
                 <div class="examples-list" id="examples-list">
                   <!-- 动态生成 -->
                 </div>
               </div>
+            </div>
 
-              <div class="family-section" id="family-section">
-                <div class="family-title"><svg class="icon icon-section"><use href="#icon-home"/></svg>词根家族</div>
-                <div class="family-list" id="family-list">
-                  <!-- 动态生成 -->
-                </div>
-                <div class="family-count" id="family-count"></div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-outline" onclick="app.prevWord()"><svg class="icon icon-btn"><use href="#icon-arrow-left"/></svg>上一个</button>
-              <button class="btn btn-primary" onclick="app.markLearned()"><svg class="icon icon-btn"><use href="#icon-check"/></svg>学会了</button>
-              <button class="btn btn-outline" onclick="app.nextWord()">下一个<svg class="icon icon-btn"><use href="#icon-arrow-right"/></svg></button>
-            </div>
           </div>
         </div>
       </div>
