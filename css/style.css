@@ -1193,7 +1193,7 @@ body {
   color: white;
   border: none;
   padding: 0;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 800;
 }
 
@@ -1493,7 +1493,7 @@ body {
 .examples-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
 .example-item {
@@ -2285,7 +2285,7 @@ body {
 
   .root-info-header .root-tag {
     padding: 0;
-    font-size: 20px;
+    font-size: 28px;
   }
 
   .family-header-row {
