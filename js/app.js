@@ -333,7 +333,6 @@ const app = {
         <button class="root-btn ${root === AppState.currentRoot ? 'active' : ''}" 
                 onclick="app.selectRoot('${root}')">
           <span class="root-serial" style="opacity:0.4;font-size:11px;margin-right:2px;min-width:18px;display:inline-block;text-align:right;">${index + 1}.</span>
-          <span class="root-color-dot" style="background: ${info.color}"></span>
           ${root} <span style="opacity:0.5;font-size:12px">(${count})</span>
         </button>
       `;
@@ -380,9 +379,9 @@ const app = {
     partsHTML += `<span class="part-equals">=</span><div class="part-item" style="background:#f0f0f0;color:#333"><div class="part-type">单词</div><div class="part-text">${word.word}</div><div class="part-meaning">${word.meaning}</div></div>`;
     partsEl.innerHTML = partsHTML;
 
-    // 词根信息
+    // 词根信息（标题栏）
     const rootInfo = ROOT_DATA[word.root];
-    document.getElementById('root-info').innerHTML = `
+    document.getElementById('root-info-header').innerHTML = `
       <span class="root-tag" style="background: ${rootInfo.color}">${word.root}</span>
       <span class="root-desc">${rootInfo.meaning}（${rootInfo.origin}）</span>
     `;

@@ -309,21 +309,26 @@
           <div class="word-card" id="word-card">
             <div class="card-header">
               <span class="word-badge" id="word-index">1 / 5</span>
+              <div class="root-info-header" id="root-info-header">
+                <span class="root-tag">port</span>
+                <span class="root-desc">携带 / to carry （拉丁语 portare）</span>
+              </div>
               <button class="btn-icon" onclick="app.speakWord()"><svg class="icon"><use href="#icon-speaker"/></svg></button>
             </div>
             <div class="card-body">
-              <div class="word-main" id="word-main">transport</div>
-              <div class="word-phonetic" id="word-phonetic">/ˈtrænspɔːrt/</div>
-              <div class="word-meaning" id="word-meaning">运输，交通</div>
-              
-              <div class="breakdown-section">
-                <div class="breakdown-title"><svg class="icon icon-section"><use href="#icon-search"/></svg>词根拆解</div>
-                <div class="breakdown-parts" id="breakdown-parts">
-                  <!-- 动态生成 -->
+              <div class="word-top-row">
+                <div class="word-left-col">
+                  <div class="word-main" id="word-main">transport</div>
+                  <div class="word-phonetic" id="word-phonetic">/ˈtrænspɔːrt/</div>
+                  <div class="word-meaning" id="word-meaning">运输，交通</div>
                 </div>
-                <div class="root-info" id="root-info">
-                  <span class="root-tag">port</span>
-                  <span class="root-desc">携带 / to carry （拉丁语 portare）</span>
+                <div class="word-right-col">
+                  <div class="breakdown-section">
+                    <div class="breakdown-title"><svg class="icon icon-section"><use href="#icon-search"/></svg>词根拆解</div>
+                    <div class="breakdown-parts" id="breakdown-parts">
+                      <!-- 动态生成 -->
+                    </div>
+                  </div>
                 </div>
               </div>
 

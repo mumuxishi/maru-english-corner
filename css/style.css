@@ -1149,18 +1149,6 @@ body {
   box-shadow: var(--shadow-btn-blue);
 }
 
-.root-btn.active .root-color-dot {
-  background: white !important;
-}
-
-.root-btn .root-color-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 2px solid rgba(0,0,0,0.1);
-}
-
 .word-display {
   flex: 1;
 }
@@ -1174,13 +1162,45 @@ body {
 }
 
 .card-header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 16px 24px;
+  padding: 12px 24px;
   background: var(--primary);
   color: white;
   border-bottom: 4px solid var(--duo-green-dark);
+  gap: 12px;
+}
+
+.card-header .word-badge {
+  justify-self: start;
+}
+
+.card-header .btn-icon {
+  justify-self: end;
+}
+
+.root-info-header {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.root-info-header .root-tag {
+  background: none;
+  color: white;
+  border: none;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.root-info-header .root-desc {
+  color: rgba(255,255,255,0.95);
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .word-badge {
@@ -1214,7 +1234,28 @@ body {
   font-size: 22px;
   font-weight: 700;
   color: var(--text);
+}
+
+.word-top-row {
+  display: flex;
+  gap: 28px;
   margin-bottom: 24px;
+  align-items: flex-start;
+}
+
+.word-left-col {
+  flex: 0 0 auto;
+  min-width: 220px;
+  padding-top: 4px;
+}
+
+.word-right-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.word-right-col .breakdown-section {
+  margin-bottom: 0;
 }
 
 /* 词根拆解 */
@@ -2107,6 +2148,30 @@ body {
   .context-options,
   .speed-options {
     grid-template-columns: 1fr;
+  }
+
+  .word-top-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .word-left-col {
+    min-width: auto;
+  }
+
+  .card-header {
+    grid-template-columns: auto 1fr auto;
+    padding: 10px 16px;
+    gap: 8px;
+  }
+
+  .root-info-header .root-desc {
+    font-size: 12px;
+  }
+
+  .root-info-header .root-tag {
+    padding: 0;
+    font-size: 13px;
   }
 
   .bottom-nav {
