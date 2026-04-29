@@ -1193,7 +1193,7 @@ body {
   color: white;
   border: none;
   padding: 0;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 800;
 }
 
@@ -1493,7 +1493,7 @@ body {
 .examples-list {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 .example-item {
@@ -1503,7 +1503,7 @@ body {
 .example-en {
   font-size: 16px;
   color: var(--text);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   line-height: 1.7;
   font-weight: 600;
 }
@@ -2285,7 +2285,7 @@ body {
 
   .root-info-header .root-tag {
     padding: 0;
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .family-header-row {
